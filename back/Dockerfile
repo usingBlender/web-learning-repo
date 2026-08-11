@@ -6,4 +6,7 @@ RUN pip install fastapi[standard] uvicorn sqlalchemy passlib[bcrypt] python-jose
 
 COPY . /test
 
+EXPOSE 8000
+
+# CMD ["uvicorn", "main:app", "--reload"]
 CMD ["fastapi", "run", "main.py", "--port", "80"]
