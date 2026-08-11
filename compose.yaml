@@ -1,0 +1,5 @@
+services:
+  back:
+    build: ./back/
+    ports:
+      - "${API_PORT}:80"
