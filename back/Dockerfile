@@ -2,7 +2,7 @@ FROM python:3.14
 
 WORKDIR /test
 
-RUN pip install fastapi[standard] uvicorn sqlalchemy passlib[bcrypt] python-jose[cryptography] python-dotenv python-multipart
+RUN pip install fastapi[standard] uvicorn sqlalchemy sqlalchemy-utils alembic passlib[bcrypt] python-jose[cryptography] python-dotenv python-multipart
 
 COPY . /test
 
