@@ -1,7 +1,13 @@
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey
 from sqlalchemy.orm import declarative_base
+import os
 
-db = create_engine("sqlite:///banco.db")
+
+load_dotenv()
+
+print(os.getenv("DATABASE_URL"))
+db = create_engine(f"{os.getenv("DATABASE_URL")}")  # pyright: ignore[reportArgumentType]
 
 Base = declarative_base()
 
