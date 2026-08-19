@@ -1,13 +1,10 @@
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey
 from sqlalchemy.orm import declarative_base
-import os
 
+from main import DB_URL
 
-load_dotenv()
-
-print(os.getenv("DATABASE_URL"))
-db = create_engine(f"{os.getenv("DATABASE_URL")}")  # pyright: ignore[reportArgumentType]
+db = create_engine(f"{DB_URL}")
 
 Base = declarative_base()
 

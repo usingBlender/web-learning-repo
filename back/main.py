@@ -6,6 +6,9 @@ load_dotenv()
 
 SECRET_KEY=os.getenv("SECRET_KEY")
 
+DB_PWD=os.getenv("DB_PWD")
+DB_URL=f"postgresql+psycopg2://postgres:{DB_PWD}@db:5432/postgres"
+
 app = FastAPI()
 
 from auth_routes import auth_router  # pyright: ignore[reportImplicitRelativeImport]

@@ -4,19 +4,30 @@ services:
     ports:
       - "${API_PORT}:80"
     volumes:
-      - ./back/:/app
-      - main:/app
+      - ./back:/app
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    command: sh -c 'echo STEP one && ls --color=auto && echo STEP TWO && alembic revision --autogenerate -m "docker compose alembic startup" && echo STEP THREE && alembic upgrade head && echo STEP FOUR && fastapi run main.py --port 80'
+
   db:
     image: postgres
-      restart: always
+    restart: always
     shm_size: 128mb
     volumes:
-      - .:/db
-      - db:/db
+      - ./db:/db
     environment:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     ports:
       - "${DB_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
   adminer:
     image: adminer
     restart: always

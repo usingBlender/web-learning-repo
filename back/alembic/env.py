@@ -6,6 +6,8 @@ from sqlalchemy import event
 
 from alembic import context
 
+from main import DB_URL
+
 import sys
 import os
 
@@ -15,7 +17,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option("sqlalchemy.url", f"{os.environ.get("DATABASE_URL")}")  # pyright: ignore[reportArgumentType]
+config.set_main_option("sqlalchemy.url", f"{DB_URL}")  # pyright: ignore[reportArgumentType]
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
