@@ -10,6 +10,8 @@ from main import ALGORITHM, AT_TIMEOUT, SECRET_KEY
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
+# AUTENTICAÇÃO COM TOKEN
+
 def criar_token(uid, time_delta:timedelta = timedelta(minutes=int(AT_TIMEOUT))):
     data_expiracao = datetime.now(timezone.utc) + time_delta  # pyright: ignore[reportArgumentType]
     dic_info = {
@@ -21,6 +23,16 @@ def criar_token(uid, time_delta:timedelta = timedelta(minutes=int(AT_TIMEOUT))):
 
     return jwt_codificado
 
+def verificar_token(token, session:Session):
+    # verificar se o token é valido
+    # extrair o ID do usuário do token
+    usuario = session.query(Usuario).filter(Usuario.id == 1).first()
+
+    if not usuario:
+        return False
+
+    return usuario
+
 def autenticar_usuario(email, senha, session:Session):
     usuario = session.query(Usuario).filter(Usuario.email==email).first()
 
@@ -29,6 +41,8 @@ def autenticar_usuario(email, senha, session:Session):
     elif not password_handler.verify_password(senha, usuario.senha):
         return False
     return usuario
+
+# ROTAS
 
 @auth_router.get("/")
 async def home():
@@ -61,10 +75,23 @@ async def login(login_schema:LoginSchema, session:Session = Depends(pegar_sessao
         raise HTTPException(status_code=400, detail="login falho, usuario ou senha errados")
     else:
         access_token = criar_token(usuario.id)
-        refresh_token = criar_token(usuario.id, timedelta(days=7)
+        refresh_token = criar_token(usuario.id, timedelta(days=7))
         
         return {
                 "access_token": access_token,
                 "refresh_token": refresh_token,
                 "token_type": "Bearer"
                 }
+
+@auth_router.post("/refresh")
+async def refresh_token(token, session:Session = Depends(pegar_sessao)):
+    usuario = verificar_token(token, session)
+    
+    if not usuario:
+        raise HTTPException(status_code=400, detail="token invalido")
+
+    access_token = criar_token(usuario.id)
+    return {
+            "access_token": access_token,
+            "token_type": "Bearer"
+            }
