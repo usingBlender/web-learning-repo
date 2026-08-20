@@ -7,6 +7,10 @@ load_dotenv()
 SECRET_KEY=os.getenv("SECRET_KEY")
 
 DB_PWD=os.getenv("DB_PWD")
+
+ALGORITHM=os.getenv("ALGORITHM")
+AT_TIMEOUT=os.getenv("ACCESS_TOKEN_TIMEOUT")
+
 DB_URL=f"postgresql+psycopg2://postgres:{DB_PWD}@db:5432/postgres"
 
 app = FastAPI()
@@ -19,9 +23,4 @@ app.include_router(order_router)
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
+    return {"Hello": "this is the root endpoint"}

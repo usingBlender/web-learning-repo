@@ -10,8 +10,11 @@ __pycache__/
 # C extensions
 *.so
 
+# alembic
+back/alembic/versions/*
+
 # Databases
-*.db
+db/
 
 # Distribution / packaging
 .Python
